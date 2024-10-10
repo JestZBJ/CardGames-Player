@@ -167,7 +167,7 @@ def play_blackjack():
     print("Hit or Stand?")
     ans = input()
 
-    while ans != "stand":
+    while (ans.lower() != "stand"):
         deal(user, deck)       #why wont this work!!!!!#nvrmnd peter fixed it, just had to add the input
 
         dealtCard = user.hand[-1]
