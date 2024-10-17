@@ -2,4 +2,4 @@
 # Currently, the only working game is Blackjack, and it is still in a testing phase.
 
 # Beta testers -
-#      Skyland Pirate
+#      SkylandPirate
