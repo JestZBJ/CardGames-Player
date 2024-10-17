@@ -274,6 +274,9 @@ def play_blackjack():
 def play_crazy_eights():
     pass
 
+def play_31():
+    pass
+
 print("Usually, I would ask what you want to play, but right now there's only one option.  Blackjack.")
 print("It's also still in testing, soooo...  Anyways, here you go.\n")
 
