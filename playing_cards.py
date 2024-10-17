@@ -78,83 +78,66 @@ def play_blackjack():
     deck = new_standard_deck()
     random.shuffle(deck)
 
+    print("How many players?  Please note that the standard 52 card deck can run out of cards and crash the game.")
+    numPlayers = int(input())
+    players = []
+
+    for p in range(numPlayers):
+        user = Player([])
+        players.append(user)
+
     dealer = Player([])
-    user = Player([])
-    players = [user, dealer]
+    players.append(dealer)
 
     for i in range(2):
         for j in players:
             deal(j, deck)
     
-    userHandValue = 0
-    dealerHandValue = 0
-    userAce = False
-    dealerAce = False
-    
-    for a in user.hand:
-        if (a[0] == "2"):
-            userHandValue += 2
-        if (a[0] == "3"):
-            userHandValue += 3
-        if (a[0] == "4"):
-            userHandValue += 4
-        if (a[0] == "5"):
-            userHandValue += 5
-        if (a[0] == "6"):
-            userHandValue += 6
-        if (a[0] == "7"):
-            userHandValue += 7
-        if (a[0] == "8"):
-            userHandValue += 8
-        if (a[0] == "9"):
-            userHandValue += 9
-        if (a[0] == "1" or a[0] == "J" or a[0] == "Q" or a[0] == "K"):
-            userHandValue += 10
-        if (a[0] == "A"):
-            userHandValue += 11
-            userAce = True
-        
-        if (userHandValue > 21 and userAce == True):
-            userHandValue -= 10
-    
-    for b in dealer.hand:
-        if (b[0] == "2"):
-            dealerHandValue += 2
-        if (b[0] == "3"):
-            dealerHandValue += 3
-        if (b[0] == "4"):
-            dealerHandValue += 4
-        if (b[0] == "5"):
-            dealerHandValue += 5
-        if (b[0] == "6"):
-            dealerHandValue += 6
-        if (b[0] == "7"):
-            dealerHandValue += 7
-        if (b[0] == "8"):
-            dealerHandValue += 8
-        if (b[0] == "9"):
-            dealerHandValue += 9
-        if (b[0] == "1" or b[0] == "J" or b[0] == "Q" or b[0] == "K"):
-            dealerHandValue += 10
-        if (b[0] == "A"):
-            dealerHandValue += 11
-            dealerAce = True
-        
-        if (dealerHandValue > 21 and dealerAce == True):
-            dealerHandValue -= 10
+    ace = []
+    aceIndex = 0
+    for q in players:
+        ace.append(False)
 
-    print("Dealer's upcard: " + dealer.hand[0])
+        for a in q.hand:
+            if (a[0] == "2"):
+                q.handValue += 2
+            if (a[0] == "3"):
+                q.handValue += 3
+            if (a[0] == "4"):
+                q.handValue += 4
+            if (a[0] == "5"):
+                q.handValue += 5
+            if (a[0] == "6"):
+                q.handValue += 6
+            if (a[0] == "7"):
+                q.handValue += 7
+            if (a[0] == "8"):
+                q.handValue += 8
+            if (a[0] == "9"):
+                q.handValue += 9
+            if (a[0] == "1" or a[0] == "J" or a[0] == "Q" or a[0] == "K"):
+                q.handValue += 10
+            if (a[0] == "A"):
+                q.handValue += 11
+                ace[aceIndex] = True
+            
+            if (q.handValue > 21 and ace[aceIndex] == True):
+                q.handValue -= 10
+        
+        aceIndex = aceIndex + 1
 
-    if (dealer.hand[0][0] == "A"):
-        if (dealer.hand[1][0] == "1" or dealer.hand[1][0] == "J" or dealer.hand[1][0] == "Q" or dealer.hand[1][0] == "K"):
-            print("Dealer checks hole card:", dealer.hand[1])
+    print("\n\nDealer's upcard: " + players[-1].hand[0])
+
+    if (players[-1].hand[0][0] == "A"):
+        if (players[-1].hand[1][0] == "1" or players[-1].hand[1][0] == "J" or players[-1].hand[1][0] == "Q" or players[-1].hand[1][0] == "K"):
+            print("Dealer checks hole card:", players[-1].hand[1])
             print("House wins")
             sys.exit()
         else:
             print("Dealer checks hole card: Round still in play\n")
-    elif (dealer.hand[0][0] == "1" or dealer.hand[0][0] == "J" or dealer.hand[0][0] == "Q" or dealer.hand[0][0] == "K"):
-        if (dealer.hand[1][0] == "A"):
-            print("Dealer checks hole card:", dealer.hand[1])
+    elif (players[-1].hand[0][0] == "1" or players[-1].hand[0][0] == "J" or players[-1].hand[0][0] == "Q" or players[-1].hand[0][0] == "K"):
+        if (players[-1].hand[1][0] == "A"):
+            print("Dealer checks hole card:", players[-1].hand[1])
             print("House wins")
             sys.exit()
         else:
@@ -162,105 +145,134 @@ def play_blackjack():
     else:
         print()
 
-    print("Your hand:", user.hand)
-    print("Hand value:", userHandValue)
-    print("Hit or Stand?")
-    ans = input()
+    for h in range(len(players) - 1):
+        print("\nPlayer ", h + 1 , "hand:", players[h].hand)
+        print("Hand value:", players[h].handValue)
+    
+    aceIndex = 0
 
-    while (ans.lower() != "stand"):
-        deal(user, deck)       #why wont this work!!!!!#nvrmnd peter fixed it, just had to add the input
-
-        dealtCard = user.hand[-1]
-        if (dealtCard[0] == "2"):
-            userHandValue += 2
-        if (dealtCard[0] == "3"):
-            userHandValue += 3
-        if (dealtCard[0] == "4"):
-            userHandValue += 4
-        if (dealtCard[0] == "5"):
-            userHandValue += 5
-        if (dealtCard[0] == "6"):
-            userHandValue += 6
-        if (dealtCard[0] == "7"):
-            userHandValue += 7
-        if (dealtCard[0] == "8"):
-            userHandValue += 8
-        if (dealtCard[0] == "9"):
-            userHandValue += 9
-        if (dealtCard[0] == "1" or dealtCard[0] == "J" or dealtCard[0] == "Q" or dealtCard[0] == "K"):
-            userHandValue += 10
-        if (dealtCard[0] == "A"):
-            userHandValue += 11
-            userAce = True
-        
-        if (userHandValue > 21 and userAce == True):
-            userHandValue -= 10
-            userAce = False
-        
-        print("\nDealt:", dealtCard)
-        print("Your hand:", user.hand)
-        print("Hand value:", userHandValue)
-
-        if (userHandValue > 21):
-            print("Bust\nHouse wins")
-            sys.exit()
-
+    for t in range(len(players) - 1):
+        print("\n\nPlayer", t + 1, "turn -\n")
+        print("Your hand:", players[t].hand)
+        print("Hand value:", players[t].handValue)
         print("Hit or Stand?")
         ans = input()
+
+        while (ans.lower() != "stand"):
+            deal(players[t], deck)       #why wont this work!!!!!#nvrmnd peter fixed it, just had to add the input
+
+            dealtCard = players[t].hand[-1]
+            if (dealtCard[0] == "2"):
+                players[t].handValue += 2
+            if (dealtCard[0] == "3"):
+                players[t].handValue += 3
+            if (dealtCard[0] == "4"):
+                players[t].handValue += 4
+            if (dealtCard[0] == "5"):
+                players[t].handValue += 5
+            if (dealtCard[0] == "6"):
+                players[t].handValue += 6
+            if (dealtCard[0] == "7"):
+                players[t].handValue += 7
+            if (dealtCard[0] == "8"):
+                players[t].handValue += 8
+            if (dealtCard[0] == "9"):
+                players[t].handValue += 9
+            if (dealtCard[0] == "1" or dealtCard[0] == "J" or dealtCard[0] == "Q" or dealtCard[0] == "K"):
+                players[t].handValue += 10
+            if (dealtCard[0] == "A"):
+                players[t].handValue += 11
+                ace[aceIndex] = True
+            
+            if (players[t].handValue > 21 and ace[aceIndex] == True):
+                players[t].handValue -= 10
+                ace[aceIndex] = False
+            
+            print("\nDealt:", dealtCard)
+            print("Your hand:", players[t].hand)
+            print("Hand value:", players[t].handValue)
+
+            if (players[t].handValue > 21):
+                print("Bust")
+                break
+
+            print("Hit or Stand?")
+            ans = input()
+        
+        aceIndex = aceIndex + 1
     
     print("\nDealer's turn -\n")
-    print("Dealer's hand:", dealer.hand)
-    print("Hand value:", dealerHandValue)
+    print("Dealer's hand:", players[-1].hand)
+    print("Hand value:", players[-1].handValue)
 
-    while ((dealerAce == False and dealerHandValue < 17 and dealerHandValue < userHandValue) or (dealerAce == True and dealerHandValue < userHandValue)):
+    allBust = True
+    highestHand = 0
+    
+    for g in range(len(players) - 1):
+        if (players[g].handValue > 21):
+            continue
+        if (players[g].handValue <22):
+            allBust = False
+        if (players[g].handValue > highestHand):
+            highestHand = players[g].handValue
+
+    #did all bust; who's the hightest not bust
+    while (players[-1].handValue < highestHand and not allBust and ((ace[-1] == False and players[-1].handValue < 17) or (ace[-1] == True))):
         print("Dealer Hits")
         time.sleep(2)
-        deal(dealer, deck)
+        deal(players[-1], deck)
 
-        dealtCard = dealer.hand[-1]
+        dealtCard = players[-1].hand[-1]
         if (dealtCard[0] == "2"):
-            dealerHandValue += 2
+            players[-1].handValue += 2
         if (dealtCard[0] == "3"):
-            dealerHandValue += 3
+            players[-1].handValue += 3
         if (dealtCard[0] == "4"):
-            dealerHandValue += 4
+            players[-1].handValue += 4
         if (dealtCard[0] == "5"):
-            dealerHandValue += 5
+            players[-1].handValue += 5
         if (dealtCard[0] == "6"):
-            dealerHandValue += 6
+            players[-1].handValue += 6
         if (dealtCard[0] == "7"):
-            dealerHandValue += 7
+            players[-1].handValue += 7
         if (dealtCard[0] == "8"):
-            dealerHandValue += 8
+            players[-1].handValue += 8
         if (dealtCard[0] == "9"):
-            dealerHandValue += 9
+            players[-1].handValue += 9
         if (dealtCard[0] == "1" or dealtCard[0] == "J" or dealtCard[0] == "Q" or dealtCard[0] == "K"):
-            dealerHandValue += 10
+            players[-1].handValue += 10
         if (dealtCard[0] == "A"):
-            dealerHandValue += 11
-            dealerAce = True
+            players[-1].handValue += 11
+            ace[-1] = True
         
-        if (dealerHandValue > 21 and dealerAce == True):
-            dealerHandValue -= 10
-            dealerAce = False
+        if (players[-1].handValue > 21 and ace[-1] == True):
+            players[-1].handValue -= 10
+            ace[-1] = False
         
         print("\nDealt:", dealtCard)
-        print("Dealer's hand:", dealer.hand)
-        print("Hand value:", dealerHandValue)
+        print("Dealer's hand:", players[-1].hand)
+        print("Hand value:", players[-1].handValue)
 
-        if (dealerHandValue > 21):
-            print("Bust\nYou win")
-            sys.exit()
+        if (players[-1].handValue > 21):
+            print("Bust")
+            break
     
-    print("Dealer Stands\n")
-    time.sleep(2)
+    if (players[-1].handValue < 22):
+        print("Dealer Stands\n")
+        time.sleep(2)
     
-    if (userHandValue > dealerHandValue):
-        print("Results - You win")
-    if (userHandValue < dealerHandValue):
-        print("Results - Dealer wins")
-    if (userHandValue == dealerHandValue):
-        print("Results - Pushback")
+    for t in range(len(players) - 1):
+        print("\nPlayer", t + 1, "Results: ")
+
+        if ((players[t].handValue > players[-1].handValue or players[-1].handValue > 21) and players[t].handValue < 22):
+            print(" - You win")
+        if ((players[t].handValue < players[-1].handValue and players[-1].handValue < 22) or players[t].handValue > 21):
+            print(" - Dealer wins")
+        if (players[t].handValue == players[-1].handValue and players[t].handValue < 22):
+            print(" - Pushback")
+
+def play_crazy_eights():
+    pass
 
 print("Usually, I would ask what you want to play, but right now there's only one option.  Blackjack.")
 print("It's also still in testing, soooo...  Anyways, here you go.\n")
