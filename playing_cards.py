@@ -11,6 +11,7 @@ from dataclasses import dataclass
 class Player:
     def __init__(self, hand):
         self.hand = hand
+        self.handValue = 0
 
 def new_standard_deck():
     deck = []
