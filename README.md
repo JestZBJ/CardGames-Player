@@ -1,5 +1,5 @@
-# This is meant to be a program where you can play various card games, such as Blackjack, Poker, Uno, etc.
-# Currently, the only working game is Blackjack, and it is still in a testing phase.
+# This is meant to be a program where you can play various card games, such as Blackjack, Poker, etc.
+# Currently, the three working games are Blackjack, Crazy Eights, and 31.
 
-# Beta testers -
+# Certified Beta testers -
 #      SkylandPirate
