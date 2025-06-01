@@ -1,4 +1,5 @@
 import random
+import os
 import sys
 import time
 from dataclasses import dataclass
@@ -68,11 +69,12 @@ def new_custom_deck():
             card = suits[i] + values[j]
             deck.append(card)'''
 
-def deal(players, deck):
-    players.hand.append(deck[0])
+def deal(player, deck):
+    player.hand.append(deck[0])
     deck.pop(0)
 
 def play_blackjack():
+    print()
     deck = new_standard_deck()
     random.shuffle(deck)
 
@@ -153,10 +155,20 @@ def play_blackjack():
         print("\n\nPlayer", t + 1, "turn -\n")
         print("Your hand:", players[t].hand)
         print("Hand value:", players[t].handValue)
-        print("Hit or Stand?")
-        ans = input()
 
-        while (ans.lower() != "stand"):
+        if (players[t].handValue == 21):
+            print("Blackjack")
+            time.sleep(2)
+            continue
+        print("Hit or Stand?  (Alternate Controls: 1 Hit, 2 Stand)")
+        ans = str(input())
+
+        while (ans.lower() != "stand" and ans != "2"):
+            if(ans.lower() != "hit" and ans != "1"):
+                print("\nSorry, that answer is unreadable.  Please re-enter your command.")
+                ans = str(input())
+                continue
+
             deal(players[t], deck)       #why wont this work!!!!!#nvrmnd peter fixed it, just had to add the input
 
             dealtCard = players[t].hand[-1]
@@ -192,10 +204,11 @@ def play_blackjack():
 
             if (players[t].handValue > 21):
                 print("Bust")
+                time.sleep(2)
                 break
 
-            print("Hit or Stand?")
-            ans = input()
+            print("Hit or Stand?  (Alternate Controls: 1 Hit, 2 Stand)")
+            ans = str(input())
         
         aceIndex = aceIndex + 1
     
@@ -253,6 +266,7 @@ def play_blackjack():
 
         if (players[-1].handValue > 21):
             print("Bust")
+            time.sleep(2)
             break
     
     if (players[-1].handValue < 22):
@@ -270,9 +284,94 @@ def play_blackjack():
             print(" - Pushback")
 
 def play_crazy_eights():
-    pass
+    print()
+    deck = new_standard_deck()
+    random.shuffle(deck)
+    ans = ""
+
+    print("How many players?  Please note that the standard 52 card deck can run out of cards and crash the game.")
+    numPlayers = int(input())
+    players = []
+
+    for p in range(numPlayers - 1):
+        user = Player([])
+        players.append(user)
+
+    dealer = Player([])
+    players.append(dealer)
+
+    for i in range(8):
+        for j in players:
+            deal(j, deck)
+    
+    discardPile = []
+    discardTop = deck[0]
+    deck.pop(0)
+
+    gameOver = False
+    truePlayerNum = len(players)
+    winner = 0
+
+    while gameOver == False:
+        playerNum = 1
+
+        for u in players:
+            if gameOver == False:
+                os.system("cls")
+                
+                while (ans.lower() != "continue" and ans.lower() != "/*-"):
+                    print("Player", str(playerNum), "'s turn.  Pass device to Player " + str(playerNum) + " and type *Continue* if ready to play.  (Alternate Controls:  /*- Continue)")
+                    ans = str(input())
+
+                os.system("cls")
+                
+                print("Player " + str(playerNum) + "'s hand:")
+                print(u.hand)
+                print("\nTop card in discard pile: ", discardTop, discardPile)
+                print("\nWhich card would you like to dicard.  If you can not play, type 'Draw'.  (Alternate Controls:  /*- Continue)\n(CARDS ARE CASE SENSITIVE: TYPE THE CARD VALUE AS YOU SEE IT.)")
+                ans = str(input())
+
+                os.system("cls")
+
+                while (ans.lower() == "draw" or ans.lower() == "+"):
+                    os.system("cls")
+                    
+                    deal(u, deck)
+                    print("Player " + str(playerNum) + "'s hand:")
+                    print(u.hand)
+                    print("\nTop card in discard pile: ", discardTop, discardPile)
+
+                    print("\nWhich card would you like to dicard.  If you can not play, type 'Draw'\n(CARDS ARE CASE SENSITIVE: TYPE THE CARD VALUE AS YOU SEE IT.)")
+                    ans = str(input())
+
+                u.hand.remove(ans)
+                discardPile.insert(0, discardTop)
+                discardTop = ans
+
+                os.system("cls")
+
+                if (len(u.hand) == 0):
+                    gameOver = True
+                    winner = playerNum
+                    continue
+
+                print("Player " + str(playerNum) + "'s hand:")
+                print(u.hand)
+                print("\nTop card in discard pile: ", discardTop, discardPile)
+
+                playerNum += 1
+                if (playerNum > truePlayerNum):
+                    playerNum = 1
+
+                while (ans.lower() != "clear" and ans.lower() != "-*/"):
+                    print("\nReady for Player " + str(playerNum) + "'s turn.  Type 'Clear' to clear the screen.  (Alternate Controls:  -*/ Clear)")
+                    ans = str(input())
+    
+    print("Player " + str(playerNum) + " has run out of cards.")
+    print("\nPlayer " + str(playerNum) + " Wins!\n")
 
 def play_31():
+    print()
     deck = new_standard_deck()
     ans = ""
 
@@ -496,6 +595,7 @@ def play_31():
             
             playerNum += 1
     
+    #this is where play ends, continue onto scoring
     playerNum = 0
     winHand = 0
     winners = []
@@ -523,12 +623,20 @@ def play_31():
         
         print("wins!")
 
-print("Hey!  I've got more than one game now!  I can offer you Blackjack or 31.")
-print("So, which would you like to play?")
+os.system("cls")
+
+print("\nHello!  What game would you like to play?  Type the corresponding number to choose then press enter\n")
+print("1:  Blackjack")
+print("2:  Crazy Eights")
+print("3:  31")
 
 choice = str(input())
 
-if (choice.lower() == "blackjack"):
+print()
+
+if (choice == "1"):
     play_blackjack()
-if (choice.lower() == "31"):
+elif (choice == "2"):
+    play_crazy_eights()
+elif (choice == "3"):
     play_31()
